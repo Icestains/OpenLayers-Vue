@@ -1,0 +1,61 @@
+#rootMap {
+    height: 100vh;
+    width: 100%;
+    background: lightgray;
+}
+
+.ol-scale-line {
+    bottom: 58px !important;
+}
+
+.btnGroups {
+    position: fixed !important;
+    top: 5%;
+    right: 20px;
+    z-index: 1000;
+}
+
+.btn-group-vertical {
+    width: 120px !important;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.tooltips {
+    position: relative;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    color: white;
+    padding: 4px 8px;
+    opacity: 0.9;
+    white-space: nowrap;
+}
+
+.tooltips-measure {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.tooltips-static {
+    background-color: #ffcc33;
+    color: black;
+    border: 1px solid white;
+}
+
+.tooltips-measure:before,
+.tooltips-static:before {
+    border-top: 6px solid rgba(0, 0, 0, 0.5);
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    margin-left: -7px;
+    left: 50%;
+}
+
+.tooltips-static:before {
+    border-top-color: #ffcc33;
+}

@@ -10,7 +10,6 @@
   import 'ol'
   import {Map, View} from 'ol'
 
-  import olLayerTitle from 'ol/layer/Tile'
 
   import olOSM from 'ol/source/OSM'
 
@@ -44,7 +43,7 @@
           target: 'rootMap',
 
           layers: [
-            new olLayerTitle({
+            new olLayerTile({
               source: OSM
             }),
             new olLayerTile({
