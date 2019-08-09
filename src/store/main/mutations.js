@@ -130,7 +130,8 @@ export default {
         this.commit('ClEAR_ALL_OVERLAYS')
 
         let XYZ = new olXYZ({
-            url: 'http://localhost:3000/sdcard/digital/{z}/{x}/{-y}.png',
+            // url: 'http://localhost:3000/sdcard/digital/{z}/{x}/{-y}.png',
+            url: process.env.NODE_ENV === 'production' ? '/sdcard/digital/{z}/{x}/{-y}.png' : 'http://localhost:3000/sdcard/digital/{z}/{x}/{-y}.png',
         })
 
         let offlineMapLayer = new olLayerTile({
@@ -187,7 +188,9 @@ export default {
             return Math.sqrt(Math.pow((pointA[0] - pointB[0]), 2) + Math.pow((pointA[1] - pointB[1]), 2))
         }
 
-        state.lineDraw.on('drawend', function (event) {
+        let measureAngle
+
+        measureAngle = state.lineDraw.on('drawend', function (event) {
             let linePoints = event.feature.getGeometry().getCoordinates()
             let aPoint = linePoints[0];
             let bPoint = linePoints[1];
@@ -201,11 +204,13 @@ export default {
                 position: bPoint,
                 content: angleContent,
             })
-            window.console.log(angleContent);
-            state.map.removeInteraction(state.lineDraw);
+            window.console.log(angleContent)
+            state.map.removeInteraction(state.lineDraw)
+            unByKey(measureAngle)
+            // state.map.removeLayer(state.lineLayer)
         });
 
-        state.map.addInteraction(state.lineDraw);
+        state.map.addInteraction(state.lineDraw)
     },
     // 添加点标记
     [mutationTypes.ADD_POINT_LAYER](state, payload) {
@@ -248,22 +253,23 @@ export default {
     },
 
     // 添加文字new
-    // 参数： id content position
+    // 参数： id content position Element
     [mutationTypes.ADD_WORD_OVERLAY](state, payload) {
-        let helpTooltipElement;
-        let helpTooltip;
-        if (helpTooltipElement) {
-            helpTooltipElement.parentNode.removeChild(helpTooltipElement);
+        // let payload.Element;
+        let helpTooltip
+        if (payload.Element) {
+            payload.Element.parentNode.removeChild(payload.Element);
         }
-        helpTooltipElement = document.createElement('div');
-        helpTooltipElement.className = 'tooltips tooltips-measure';
-        helpTooltipElement.innerHTML = payload.content
+        payload.Element = document.createElement('div');
+        payload.Element.className = 'tooltips tooltips-measure';
+        payload.Element.innerHTML = payload.content
         helpTooltip = new Overlay({
             id: payload.id,
-            element: helpTooltipElement,
+            element: payload.Element,
             offset: [0, -15],
             positioning: 'bottom-center',
             position: payload.position,
+            stopEvent: false
         });
         state.map.addOverlay(helpTooltip);
     },
@@ -282,6 +288,10 @@ export default {
         let listener
         // 点击监听事件
         let singleClickListener
+        // 绘制监听事件
+        let drawListener
+        // drawEndListener
+        let drawEndListener
         // 添加一个绘制的线使用的layer
         window.console.log('state.showMeasure:' + state.showMeasure)
 
@@ -310,11 +320,14 @@ export default {
         state.map.addLayer(state.lineLayer)
 
         // 鼠标移动事件
-        let pointerMoveHandler = (evt) => {
+        let pointerMoveListener
+
+        // 添加地图 鼠标单机事件pointerMoveHandler
+        pointerMoveListener = state.map.on('singleclick', (evt) => {
             if (evt.dragging) {
                 return;
             }
-            let helpMsg = '点击开始';
+            let helpMsg = '点击选择下一个点';
 
             if (sketch) {
                 let geom = (sketch.getGeometry());
@@ -329,10 +342,7 @@ export default {
             helpTooltip.setPosition(evt.coordinate);
 
             helpTooltipElement.classList.remove('hidden');
-        }
-
-        // 添加地图 鼠标移动事件pointerMoveHandler
-        state.map.on('pointermove', pointerMoveHandler)
+        })
 
         // 创建绘制图层
         state.lineDraw = new olInteractionDraw({
@@ -397,7 +407,7 @@ export default {
 
         }
 
-        state.lineDraw.on('drawstart', function (evt) {
+        drawListener = state.lineDraw.on('drawstart', function (evt) {
             sketch = evt.feature;
             let tooltipCoord = evt.coordinate
 
@@ -407,14 +417,14 @@ export default {
                 if (geom instanceof Polygon) {
                     unByKey(singleClickListener);
                     output = formatArea(geom);
-                    tooltipCoord = geom.getInteriorPoint().getCoordinates();
+                    tooltipCoord = geom.getInteriorPoint().getCoordinates()
+                    measureTooltipElement.innerHTML = output
+                    measureTooltip.setPosition(tooltipCoord)
+
                 } else if (geom instanceof LineString) {
                     output = formatLength(geom);
-                    tooltipCoord = geom.getLastCoordinate();
                 }
-                measureTooltipElement.innerHTML = output
-                measureTooltipElement.classList.remove('hidden')
-                measureTooltip.setPosition(tooltipCoord);
+
             })
 
             // 鼠标点击事件监听// 鼠标点击事件
@@ -425,25 +435,30 @@ export default {
                     content: content,
                     position: e.coordinate
                 })
+                state.map.getView().animate({
+                    center: e.coordinate,
+                    duration: 200
+                })
             })
 
         }, this);
 
-        state.lineDraw.on('drawend', function () {
-
+        drawEndListener = () => {
             helpTooltipElement.classList.add('hidden');
-
             sketch = null
             measureTooltipElement = null
             helpTooltipElement = null
-
             state.map.removeInteraction(state.lineDraw);
-            unByKey(listener);
-            unByKey(singleClickListener);
-            state.map.un('pointermove', pointerMoveHandler)
+            unByKey(listener)
+            unByKey(singleClickListener)
+            unByKey(drawListener)
+            unByKey(pointerMoveListener)
+            // state.map.un('singleclick', pointerMoveHandler)
             state.showMeasure = false
             window.console.log('state.showMeasure:' + state.showMeasure)
-        })
+        }
+
+        state.lineDraw.on('drawend', drawEndListener)
 
         function createHelpTooltip() {
             if (helpTooltipElement) {
@@ -474,6 +489,10 @@ export default {
             })
             state.map.addOverlay(measureTooltip)
         }
+
+    },
+
+    [mutationTypes.DESTROY_LISTENERS](state) {
 
     }
 }

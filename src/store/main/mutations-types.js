@@ -16,6 +16,10 @@ export const CLEAR_TOP_LAYERS = 'CLEAR_TOP_LAYERS'
 
 // 移除地图上所有overLay
 export const ClEAR_ALL_OVERLAYS = 'ClEAR_ALL_OVERLAYS'
+
+// 移除监听器destroyListeners
+export const DESTROY_LISTENERS = 'DESTROY_LISTENERS'
+
 // 添加坐标轴图层
 export const ADD_ZXY_LAYER = 'ADD_ZXY_LAYER'
 

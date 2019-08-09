@@ -5,10 +5,12 @@ module.exports = {
     css: {
         sourceMap: false,
     },
+    // outputDir: 'C:\\geobos_studio\\workspace\\OpenlayersVue',
     productionSourceMap: false,
+    // publicPath: './',
     publicPath: process.env.NODE_ENV === 'production'
-        ? '/OpenLayers-Vue/'
-        : '/',
+        ? './'
+        : './',
     configureWebpack: {
         plugins: [
             new webpack.ProvidePlugin({

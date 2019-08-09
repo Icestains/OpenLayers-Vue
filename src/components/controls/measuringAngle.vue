@@ -1,5 +1,5 @@
 <template>
-    <div class="btn-group">
+    <div class="btn-group-vertical">
         <button type="button" class="btn btn-light" v-on:click="addAngleLayer">测量角度
         </button>
     </div>

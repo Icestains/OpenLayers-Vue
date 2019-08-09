@@ -1,5 +1,5 @@
 <template>
-    <div class="btn-group">
+    <div class="btn-group-vertical">
         <button type="button" class="btn btn-light" v-if="!turnOnMakerPoint" v-on:click="turnOnMarkPoint">手动标记
         </button>
         <button type="button" class="btn btn-light" v-else v-on:click="turnOffMarkPoint">关闭标记</button>

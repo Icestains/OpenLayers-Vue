@@ -27,7 +27,7 @@
   import olGeomPoint from 'ol/geom/Point'
   import olFeature from 'ol/Feature'
 
-  import localBackImage from '../assets/backimage.jpg'
+  // import localBackImage from '../assets/backimage.jpg'
   import localLogoImage from '../assets/logo.png'
 
 
@@ -63,7 +63,7 @@
           layers: [
             new olLayerImage({
               source: new olSourceImageStatic({
-                url: localBackImage,
+                // url: localBackImage,
                 imageExtent: extent,
               })
             })

@@ -19,7 +19,9 @@ export default {
     lineDraw: null,
     lineLayer: null,
 
-    measureType: '测量距离',
-    showMeasure: false
+    measureType: '距离',
+    showMeasure: false,
+
+    listeners:[]
 
 }

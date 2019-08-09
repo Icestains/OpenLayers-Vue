@@ -2,15 +2,6 @@
     <div class="btn-group-vertical" role="group" aria-label="Button group with nested dropdown">
         <button class="btn btn-light" v-on:click="removeTopLayer">移除图层</button>
         <button class="btn btn-light" v-on:click="removeAllOverlays">移除覆盖</button>
-        <!--        <form class="form">-->
-        <!--            <select id="type" class="form-control btn-light">-->
-        <!--                <option value="Point">Point</option>-->
-        <!--                <option value="LineString">LineString</option>-->
-        <!--                <option value="Polygon">Polygon</option>-->
-        <!--                <option value="Circle">Circle</option>-->
-        <!--                <option value="None">None</option>-->
-        <!--            </select>-->
-        <!--        </form>-->
         <div class="btn-group" role="group">
             <button id="btnGroupDrop1" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
