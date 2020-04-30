@@ -11,7 +11,7 @@
     "bootstrap": "^4.3.1",
     "core-js": "^2.6.5",
     "es6-promise": "^4.2.8",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "ol": "^5.3.3",
